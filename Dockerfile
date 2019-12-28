@@ -1,6 +1,5 @@
 FROM ubuntu:16.04
 
-VOLUME /data
 VOLUME /config
 
 ARG DOCKERIZE_ARCH=amd64
@@ -25,9 +24,9 @@ RUN apt update \
     && useradd -u 911 -U -d /config -s /bin/false abc \
     && usermod -G users abc
 
-ADD openvpn/ /etc/openvpn/
-ADD tinyproxy /opt/tinyproxy/
-ADD scripts /etc/scripts/
+COPY openvpn/ /etc/openvpn/
+COPY tinyproxy /opt/tinyproxy/
+COPY scripts /etc/scripts/
 
 ENV OPENVPN_USERNAME=**None** \
     OPENVPN_PASSWORD=**None** \
