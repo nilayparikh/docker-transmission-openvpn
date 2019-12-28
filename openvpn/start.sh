@@ -114,15 +114,6 @@ else
   chmod 600 /config/openvpn-credentials.txt
 fi
 
-# add transmission credentials from env vars
-echo "${TRANSMISSION_RPC_USERNAME}" > /config/transmission-credentials.txt
-echo "${TRANSMISSION_RPC_PASSWORD}" >> /config/transmission-credentials.txt
-
-# Persist transmission settings for use by transmission-daemon
-dockerize -template /etc/transmission/environment-variables.tmpl:/etc/transmission/environment-variables.sh
-
-TRANSMISSION_CONTROL_OPTS="--script-security 2 --up-delay --up /etc/openvpn/tunnelUp.sh --down /etc/openvpn/tunnelDown.sh"
-
 ## If we use UFW or the LOCAL_NETWORK we need to grab network config info
 if [[ "${ENABLE_UFW,,}" == "true" ]] || [[ -n "${LOCAL_NETWORK-}" ]]; then
   eval $(/sbin/ip r l m 0.0.0.0 | awk '{if($5!="tun0"){print "GW="$3"\nINT="$5; exit}}')
@@ -165,12 +156,6 @@ if [[ "${ENABLE_UFW,,}" == "true" ]]; then
   sed -i -e s/IPV6=yes/IPV6=no/ /etc/default/ufw
   ufw enable
 
-  if [[ "${TRANSMISSION_PEER_PORT_RANDOM_ON_START,,}" == "true" ]]; then
-    PEER_PORT="${TRANSMISSION_PEER_PORT_RANDOM_LOW}:${TRANSMISSION_PEER_PORT_RANDOM_HIGH}"
-  else
-    PEER_PORT="${TRANSMISSION_PEER_PORT}"
-  fi
-
   ufwAllowPort PEER_PORT
 
   if [[ "${WEBPROXY_ENABLED,,}" == "true" ]]; then
@@ -210,4 +195,4 @@ if [[ -n "${LOCAL_NETWORK-}" ]]; then
   fi
 fi
 
-exec openvpn ${TRANSMISSION_CONTROL_OPTS} ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
+exec openvpn ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
