@@ -30,7 +30,7 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'DockerHub (nilayparikh)'
-        repository: 'openvpn-proxy'
+        repository: 'nilayparikh/openvpn-proxy'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         
