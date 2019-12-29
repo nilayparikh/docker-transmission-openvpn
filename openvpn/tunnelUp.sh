@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/opt/tinyproxy/start.sh
+sh /opt/tinyproxy/start.sh

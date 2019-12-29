@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/opt/tinyproxy/stop.sh
+sh /opt/tinyproxy/stop.sh
