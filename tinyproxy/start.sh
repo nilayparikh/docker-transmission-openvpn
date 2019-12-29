@@ -40,8 +40,7 @@ echo "STARTING TINYPROXY"
 find_proxy_conf
 echo "Found config file $PROXY_CONF, updating settings."
 
-echo ${WEBPROXY_PORT} ${PROXY_CONF}
-set_port ${WEBPROXY_PORT} ${PROXY_CONF}
+set_port 8888 ${PROXY_CONF}
 
 # Allow all clients
 sed -i -e"s/^Allow /#Allow /" ${PROXY_CONF}
