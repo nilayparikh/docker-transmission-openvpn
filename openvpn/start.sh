@@ -195,4 +195,6 @@ if [[ -n "${LOCAL_NETWORK-}" ]]; then
   fi
 fi
 
-exec openvpn --script-security 2 --up-delay --up /etc/openvpn/tunnelUp.sh --down /etc/openvpn/tunnelDown.sh ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
+sh /opt/tinyproxy/start.sh
+
+exec openvpn --script-security 2 --up-delay ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
