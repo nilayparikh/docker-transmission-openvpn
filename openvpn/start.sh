@@ -195,5 +195,5 @@ if [[ -n "${LOCAL_NETWORK-}" ]]; then
   fi
 fi
 
-exec /opt/tinyproxy/start.sh &&
+exec /opt/tinyproxy/start.sh & &&
 exec openvpn --script-security 2 --up-delay ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
