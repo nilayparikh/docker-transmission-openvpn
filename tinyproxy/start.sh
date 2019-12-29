@@ -35,25 +35,21 @@ set_port()
   sed -i -e"s,^Port .*,Port $1," $2
 }
 
-if [[ "${WEBPROXY_ENABLED}" = "true" ]]; then
+echo "STARTING TINYPROXY"
 
-  echo "STARTING TINYPROXY"
+find_proxy_conf
+echo "Found config file $PROXY_CONF, updating settings."
 
-  find_proxy_conf
-  echo "Found config file $PROXY_CONF, updating settings."
+set_port ${WEBPROXY_PORT} ${PROXY_CONF}
 
-  set_port ${WEBPROXY_PORT} ${PROXY_CONF}
+# Allow all clients
+sed -i -e"s/^Allow /#Allow /" ${PROXY_CONF}
 
-  # Allow all clients
-  sed -i -e"s/^Allow /#Allow /" ${PROXY_CONF}
+# Disable Via Header for privacy (leaks that you're using a proxy)
+sed -i -e "s/#DisableViaHeader/DisableViaHeader/" ${PROXY_CONF}
 
-  # Disable Via Header for privacy (leaks that you're using a proxy)
-  sed -i -e "s/#DisableViaHeader/DisableViaHeader/" ${PROXY_CONF}
+# Lower log level for privacy (writes dns names by default)
+sed -i -e "s/LogLevel Info/LogLevel Critical/" ${PROXY_CONF}
 
-  # Lower log level for privacy (writes dns names by default)
-  sed -i -e "s/LogLevel Info/LogLevel Critical/" ${PROXY_CONF}
-
-  /etc/init.d/tinyproxy start
-  echo "Tinyproxy startup script complete."
-
-fi
+/etc/init.d/tinyproxy start
+echo "Tinyproxy startup script complete."
